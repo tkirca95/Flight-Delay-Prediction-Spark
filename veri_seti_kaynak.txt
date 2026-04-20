@@ -1,0 +1,140 @@
+================================================================================
+  VERİ SETİ KAYNAK BİLGİLERİ
+================================================================================
+
+Proje       : Apache Spark MLlib ile Büyük Ölçekli Uçuş Gecikmesi Tahmini
+Ders        : Büyük Veriye Giriş — Vize Ödevi
+Üniversite  : Karamanoğlu Mehmetbey Üniversitesi
+              Fen Bilimleri Enstitüsü, Bilgisayar Mühendisliği Anabilim Dalı
+Tarih       : Nisan 2026
+
+
+--------------------------------------------------------------------------------
+  1. VERİ SETİ KİMLİĞİ
+--------------------------------------------------------------------------------
+
+Veri Seti Adı : 2015 Flight Delays and Cancellations
+Yayımlayan    : U.S. Department of Transportation (DOT)
+                Bureau of Transportation Statistics (BTS)
+Yıl           : 2015
+Kapsam        : ABD iç hat ticari havayolu uçuşları (14 havayolu şirketi)
+
+Kaggle ID     : usdot/flight-delays
+Kaggle URL    : https://www.kaggle.com/datasets/usdot/flight-delays
+Orjinal Kaynak: https://www.transportation.gov/airconsumer/air-travel-consumer-reports
+                https://www.bts.gov/topics/airlines-and-airports/airline-time-performance-and-causes-flight-delays
+
+
+--------------------------------------------------------------------------------
+  2. BOYUT VE FORMAT BİLGİSİ
+--------------------------------------------------------------------------------
+
+Toplam Satır Sayısı : 5.819.079
+Toplam Kolon Sayısı : 31
+Sıkıştırılmış Boyut : ~192 MB (zip)
+Açılmış Boyut       : ~572 MB (CSV)
+
+Dosya Formatı       : CSV (UTF-8 kodlu)
+Paket İçeriği       :
+                      - flights.csv         (ana veri)
+                      - airlines.csv        (havayolu kodu ↔ isim eşlemesi)
+                      - airports.csv        (havalimanı kodu ↔ koordinat bilgisi)
+
+
+--------------------------------------------------------------------------------
+  3. BU PROJEDE KULLANILAN KOLONLAR
+--------------------------------------------------------------------------------
+
+Orjinal veri setindeki 31 kolondan yalnızca "kalkış öncesinde bilinebilecek"
+8 kolon seçilmiştir (veri sızıntısını önlemek amacıyla):
+
+  1. MONTH                  : Ay (1-12)
+  2. DAY_OF_WEEK            : Haftanın günü (1=Pazartesi, 7=Pazar)
+  3. AIRLINE                : Havayolu kodu (2 harf, ör: "AA", "DL")
+  4. ORIGIN_AIRPORT         : Kalkış havalimanı kodu (IATA 3 harf)
+  5. DESTINATION_AIRPORT    : Varış havalimanı kodu (IATA 3 harf)
+  6. SCHEDULED_DEPARTURE    : Planlanan kalkış saati (HHMM formatı, ör: 1430)
+  7. DISTANCE               : Uçuş mesafesi (mil cinsinden)
+  8. ARRIVAL_DELAY          : Varış gecikmesi (dakika) — hedef değişken için
+
+
+--------------------------------------------------------------------------------
+  4. HEDEF DEĞİŞKEN (LABEL) TÜRETİMİ
+--------------------------------------------------------------------------------
+
+Bu çalışmada ikili sınıflandırma etiketi aşağıdaki gibi türetilmiştir:
+
+  label = 1  →  ARRIVAL_DELAY >  15 dakika  ("Rötar yapar")
+  label = 0  →  ARRIVAL_DELAY ≤  15 dakika  ("Zamanında kalkar")
+
+15 dakika eşiği, FAA (Federal Aviation Administration) tarafından belirlenen
+resmi "on-time performance" tanımıdır.
+
+
+--------------------------------------------------------------------------------
+  5. VERİ İNDİRME TALİMATLARI
+--------------------------------------------------------------------------------
+
+A) Kaggle API Üzerinden (Önerilen)
+
+   1. Kaggle hesabınızdan API token alın:
+      https://www.kaggle.com/settings  →  "Create New API Token"
+      (kaggle.json dosyası indirilecek)
+
+   2. Terminalde:
+      mkdir -p ~/.kaggle
+      cp kaggle.json ~/.kaggle/
+      chmod 600 ~/.kaggle/kaggle.json
+      kaggle datasets download -d usdot/flight-delays
+      unzip flight-delays.zip -d flight_data
+
+B) Tarayıcıdan Manuel İndirme
+
+   1. https://www.kaggle.com/datasets/usdot/flight-delays adresine gidin
+   2. "Download" butonuna tıklayın (Kaggle hesabı gerekir)
+   3. İndirilen zip'i açın; flights.csv dosyasını projenin ana klasörüne koyun
+
+
+--------------------------------------------------------------------------------
+  6. LİSANS VE KULLANIM KOŞULLARI
+--------------------------------------------------------------------------------
+
+Veri seti, U.S. Department of Transportation tarafından KAMU MALI (Public Domain,
+CC0 1.0 Universal) olarak yayımlanmıştır. Akademik, eğitim ve ticari amaçlarla
+herhangi bir kısıtlama olmaksızın kullanılabilir.
+
+Kaggle üzerindeki yayın da aynı lisansı korumaktadır:
+https://creativecommons.org/publicdomain/zero/1.0/
+
+
+--------------------------------------------------------------------------------
+  7. BİLİMSEL ATIF (AKADEMİK ÇALIŞMALARDA)
+--------------------------------------------------------------------------------
+
+Bu veri setini akademik çalışmalarınızda kullanırsanız aşağıdaki biçimde atıf
+yapmanız önerilir (APA 7):
+
+  U.S. Department of Transportation. (2015). 2015 Flight delays and
+      cancellations [Veri seti]. Kaggle.
+      https://www.kaggle.com/datasets/usdot/flight-delays
+
+
+--------------------------------------------------------------------------------
+  8. İLGİLİ VERİ SETLERİ (İLERİDE KULLANILABİLECEK)
+--------------------------------------------------------------------------------
+
+Bu çalışmanın gelecek sürümlerinde aşağıdaki tamamlayıcı veri setleri
+modele eklenerek başarı oranının artırılması planlanmaktadır:
+
+  - NOAA Geçmiş Hava Durumu Verileri
+    https://www.ncdc.noaa.gov/cdo-web/datasets
+
+  - FAA Havalimanı Performans İstatistikleri
+    https://aspm.faa.gov/
+
+  - BTS Airline On-Time Performance Data (Aylık güncellenen)
+    https://www.transtats.bts.gov/
+
+================================================================================
+                                  SON
+================================================================================
